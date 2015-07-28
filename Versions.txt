@@ -1,0 +1,47 @@
+Versioner av PC test programmet för Cobia:
+
+*v0.9.2.118
+2015-06-04
+- BF 7118: Cobia flex iMAS calibration - We don't get cal factors to certificate, when doing only calibration without adjustment
+
+*v0.9.2.117
+2015-05-05
+- BF 7510: HVL not displayed in Cobia PC test sw.
+
+*v0.9.2.116
+2015-04-24
+- BF 7461: Sending command EraseCalCRC after each calibration data update, to remove the CRC check file and prevent the Cobia to warning for CRC error.
+
+*v0.9.2.115
+2015-03-10
+- Made changes to support Fluke 287 that is used for internal mAs calibration. Fluke 287 is used by INC.
+
+*v0.9.2.114
+2015-03-04
+- Added new encrypted Advanced mode command. Needed fro PTB aproval. Needed to run Cobia fw 5.6 and above. BF #7256.
+
+*v0.9.2.113
+2015-01-15
+- Adaption to new communication to Cobia 5.5A (CRLF problems). 
+- Added reset-command send to Cobia at start of new communication - to fix problems with bad offset during communication startup.
+
+*v0.9.2.112
+2014-12-19
+- Fixat bug som gav spik/"bull" i början på Ext-prob kurvformen. (Läste wf;Samples of file 1 xxxx)
+
+*v0.9.2.111
+2014-12-17
+- Justerat manuel, timed trig mode (i Commands fönstret), så de fungerar med Cobia FW >= 5.5 (new external protocol).
+- Send reset-command to Cobia when the Reset button is pressed.
+
+*v0.9.2.110
+2014-12-08
+- Fixat bugg att kV och HVL inte lästes från FW >= v5.5 (gui;... a bit changed).
+
+*v0.9.2.109
+2014-12-05
+- Justerat EM- och MAS kalibrering så den fungerar med FW >= 5.5, som använder extern protokollet för manuell trig. Sw fungerar nu både med gamla och nya FW.
+
+*v0.9.2.108
+2014-11-28
+- Lagt till integrerade värden för S1-S8 i excell listan. (Inte bara SUM1-SUM4).
