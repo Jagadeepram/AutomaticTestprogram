@@ -10,7 +10,9 @@ uses
   ClipBrd, Rtti, ExtCtrls, ImgList, uBaseApp, uExcel, uOpenOffice, Menus, uPolynomials,
   JvExControls, JvArrowButton, pngimage, Data.Bind.EngExt,
   Data.Bind.Components, Vcl.Bind.DBEngExt, JvProgressDialog, JvGradientCaption,
-  Registry, uCRC16, uCRC32, Vcl.ExtDlgs;
+  Registry, uCRC16, uCRC32, Vcl.ExtDlgs,
+  //XML related
+  XMLIntf, XMLDoc;
 
 const
    CHINA_KV_ADJUSTMENT  = 0;     // Set to 1 if compile as the China kV/Dose adjustment version. Otherwise 0
@@ -2735,6 +2737,8 @@ end;
  // Read the xml file, store node information in structure.
 
 procedure ParseAutoTestCases(FileName: string; Encoding: TEncoding );
+  XMLDoc: IXMLDocument;
+  XMLNode: IXMLNode;
 begin
 
 end;

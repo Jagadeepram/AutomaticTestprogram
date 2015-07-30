@@ -13008,8 +13008,6 @@ object frmMain: TfrmMain
     object autoTest: TTabSheet
       Caption = 'Automatic Test'
       ImageIndex = 14
-      ExplicitLeft = 3
-      ExplicitTop = 23
       object atCmdTxt: TEdit
         Left = 112
         Top = 160
@@ -13957,6 +13955,6 @@ object frmMain: TfrmMain
   end
   object atSaveTestCase: TSaveTextFileDialog
     Left = 304
-    Top = 584
+    Top = 592
   end
 end
