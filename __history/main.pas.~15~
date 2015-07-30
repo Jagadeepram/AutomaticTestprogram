@@ -869,6 +869,8 @@ type
     procedure ChinakVAdjResetClick(Sender: TObject);
     procedure ChinakVAdjSetClick(Sender: TObject);
     procedure atSendCmdClick(Sender: TObject);
+    procedure atOpenTCClick(Sender: TObject);
+    procedure atSaveTCClick(Sender: TObject);
 
 type
   TCobiaComSource = (NONE, USB_HID, USB_CDC);    // Cources for communication to Cobia
@@ -1205,10 +1207,11 @@ private
     procedure EmCheckCalibStorage();
     procedure EmAdjust(measuredCurrentValue : string);
     procedure EmCalib(measuredCurrentChargeValue : string);
-
     procedure ChinaAdjustment_SetDefault();
-
     function SendCommand_EraseCalCRC() : boolean;
+
+    // Function of Automatic testing module
+    procedure ParseAutoTestCases(FileName: string; Encoding: TEncoding );
 
   public
     pPolys: CPolynomials;
@@ -2726,6 +2729,64 @@ begin
   edtCurrent.Text := '' ;
   edtTime.Text := '' ;
   edtSamples.Text := '' ;
+end;
+
+ // Prase function of Automatic test unit.
+ // Read the xml file, store node information in structure.
+
+procedure ParseAutoTestCases(FileName: string; Encoding: TEncoding )
+begin
+
+end;
+
+procedure TfrmMain.atOpenTCClick(Sender: TObject);
+var
+  Encoding : TEncoding;
+  EncIndex : Integer;
+  Filename : String;
+begin
+  if atLoadTestCase.Execute(Self.Handle) then
+    begin
+    //selecting the filename and encoding selected by the user
+    Filename := atLoadTestCase.FileName;
+
+    EncIndex := atLoadTestCase.EncodingIndex;
+    Encoding := atLoadTestCase.Encodings.Objects[EncIndex] as TEncoding;
+
+    //checking if the file exists
+    if FileExists(Filename) then
+    begin
+      //display the contents in a memo based on the selected encoding
+      atLogs.Lines.LoadFromFile(FileName, Encoding);
+      ParseAutoTestCases(FileName,Encoding);
+    end
+    else
+      raise Exception.Create('File does not exist.');
+    end;
+end;
+
+procedure TfrmMain.atSaveTCClick(Sender: TObject);
+var
+  Encoding : TEncoding;
+  EncIndex : Integer;
+  Filename : String;
+begin
+  if atSaveTestCase.Execute(Self.Handle) then
+    begin
+    //selecting the filename and encoding selected by the user
+    Filename := atSaveTestCase.FileName;
+
+    EncIndex := atSaveTestCase.EncodingIndex;
+    Encoding := atSaveTestCase.Encodings.Objects[EncIndex] as TEncoding;
+
+    //checking if the file exists
+   { if FileExists(Filename) then
+      raise Exception.Create('File already exists.')
+    else  }
+      //save to file based on the selected encoding
+      atLogs.Lines.SaveToFile(FileName, Encoding);
+    end;
+
 end;
 
 procedure TfrmMain.atSendCmdClick(Sender: TObject);

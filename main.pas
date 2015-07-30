@@ -2731,6 +2731,14 @@ begin
   edtSamples.Text := '' ;
 end;
 
+ // Prase function of Automatic test unit.
+ // Read the xml file, store node information in structure.
+
+procedure ParseAutoTestCases(FileName: string; Encoding: TEncoding );
+begin
+
+end;
+
 procedure TfrmMain.atOpenTCClick(Sender: TObject);
 var
   Encoding : TEncoding;
