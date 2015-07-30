@@ -10,7 +10,7 @@ uses
   ClipBrd, Rtti, ExtCtrls, ImgList, uBaseApp, uExcel, uOpenOffice, Menus, uPolynomials,
   JvExControls, JvArrowButton, pngimage, Data.Bind.EngExt,
   Data.Bind.Components, Vcl.Bind.DBEngExt, JvProgressDialog, JvGradientCaption,
-  Registry, uCRC16, uCRC32;
+  Registry, uCRC16, uCRC32, Vcl.ExtDlgs;
 
 const
    CHINA_KV_ADJUSTMENT  = 0;     // Set to 1 if compile as the China kV/Dose adjustment version. Otherwise 0
@@ -740,6 +740,14 @@ type
     edtChinaDose_d1: TEdit;
     ChinakVAdjSet: TButton;
     autoTest: TTabSheet;
+    atSendCmd: TButton;
+    atCmdTxt: TEdit;
+    atLogs: TMemo;
+    atCmdCounter: TEdit;
+    atLoadTestCase: TOpenTextFileDialog;
+    atSaveTestCase: TSaveTextFileDialog;
+    atOpenTC: TButton;
+    atSaveTC: TButton;
 
     procedure ApplicationEventsMessage(var Msg: tagMSG; var Handled: Boolean);
     function  SendAdvancedModeMessage() : boolean;
@@ -860,6 +868,9 @@ type
     procedure ReadCobiaData(Sender: TObject);
     procedure ChinakVAdjResetClick(Sender: TObject);
     procedure ChinakVAdjSetClick(Sender: TObject);
+    procedure atSendCmdClick(Sender: TObject);
+    procedure atOpenTCClick(Sender: TObject);
+    procedure atSaveTCClick(Sender: TObject);
 
 type
   TCobiaComSource = (NONE, USB_HID, USB_CDC);    // Cources for communication to Cobia
@@ -1196,10 +1207,11 @@ private
     procedure EmCheckCalibStorage();
     procedure EmAdjust(measuredCurrentValue : string);
     procedure EmCalib(measuredCurrentChargeValue : string);
-
     procedure ChinaAdjustment_SetDefault();
-
     function SendCommand_EraseCalCRC() : boolean;
+
+    // Function of Automatic testing module
+    procedure ParseAutoTestCases(FileName: string; Encoding: TEncoding );
 
   public
     pPolys: CPolynomials;
@@ -1274,6 +1286,8 @@ begin
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
+var
+  encodings : TStrings;
 begin
   iSensitivity:=0;
 
@@ -1304,6 +1318,25 @@ begin
   cbxPerm_Ocean.AddItem('Display', nil);
   cbxPerm_Ocean.AddItem('Connect', nil);
   cbxPerm_Ocean.AddItem('Professional', nil);
+
+  // Create Instance for load and save file dilogs.
+  atLoadTestCase := TOpenTextFileDialog.Create(Self);
+  atSaveTestCase := TSaveTextFileDialog.Create(Self);
+
+  // create a new string list that holds encoding info
+  encodings := TStringList.Create();
+
+  // add some encodings to the list
+  encodings.AddObject('ASCII', TEncoding.ASCII);
+  encodings.AddObject('UNICODE', TEncoding.Unicode);
+  encodings.AddObject('UTF8', TEncoding.UTF8);
+
+  atLoadTestCase.Encodings.Assign(encodings);
+  atSaveTestCase.Encodings.Assign(encodings);
+
+  atLoadTestCase.Filter := 'Text files (*.txt)|*.TXT|XML files (*.xml)|*.XML|Any file (*.*)|*.*';
+  atSaveTestCase.Filter := 'Text files (*.txt)|*.TXT|XML files (*.xml)|*.XML|Any file (*.*)|*.*';
+
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -2696,6 +2729,65 @@ begin
   edtCurrent.Text := '' ;
   edtTime.Text := '' ;
   edtSamples.Text := '' ;
+end;
+
+procedure TfrmMain.atOpenTCClick(Sender: TObject);
+var
+  Encoding : TEncoding;
+  EncIndex : Integer;
+  Filename : String;
+begin
+  if atLoadTestCase.Execute(Self.Handle) then
+    begin
+    //selecting the filename and encoding selected by the user
+    Filename := atLoadTestCase.FileName;
+
+    EncIndex := atLoadTestCase.EncodingIndex;
+    Encoding := atLoadTestCase.Encodings.Objects[EncIndex] as TEncoding;
+
+    //checking if the file exists
+    if FileExists(Filename) then
+    begin
+      //display the contents in a memo based on the selected encoding
+      atLogs.Lines.LoadFromFile(FileName, Encoding);
+      ParseAutoTestCases(FileName,Encoding);
+    end
+    else
+      raise Exception.Create('File does not exist.');
+    end;
+end;
+
+procedure TfrmMain.atSaveTCClick(Sender: TObject);
+var
+  Encoding : TEncoding;
+  EncIndex : Integer;
+  Filename : String;
+begin
+  if atSaveTestCase.Execute(Self.Handle) then
+    begin
+    //selecting the filename and encoding selected by the user
+    Filename := atSaveTestCase.FileName;
+
+    EncIndex := atSaveTestCase.EncodingIndex;
+    Encoding := atSaveTestCase.Encodings.Objects[EncIndex] as TEncoding;
+
+    //checking if the file exists
+   { if FileExists(Filename) then
+      raise Exception.Create('File already exists.')
+    else  }
+      //save to file based on the selected encoding
+      atLogs.Lines.SaveToFile(FileName, Encoding);
+    end;
+
+end;
+
+procedure TfrmMain.atSendCmdClick(Sender: TObject);
+var
+  counter:integer;
+  i: integer;
+begin
+  For i := 0 to StrToInt(atCmdCounter.Text) do
+  SendCommand(atCmdTxt.Text);
 end;
 
 procedure TfrmMain.BtMASCopyCurrentClick(Sender: TObject);

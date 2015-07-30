@@ -13008,6 +13008,60 @@ object frmMain: TfrmMain
     object autoTest: TTabSheet
       Caption = 'Automatic Test'
       ImageIndex = 14
+      object atCmdTxt: TEdit
+        Left = 112
+        Top = 160
+        Width = 121
+        Height = 21
+        TabOrder = 0
+      end
+      object atSendCmd: TButton
+        Left = 112
+        Top = 208
+        Width = 109
+        Height = 25
+        Caption = 'Send Command'
+        TabOrder = 2
+        OnClick = atSendCmdClick
+      end
+      object atLogs: TMemo
+        Left = 112
+        Top = 256
+        Width = 185
+        Height = 200
+        TabStop = False
+        Lines.Strings = (
+          'atLogs')
+        ParentShowHint = False
+        ScrollBars = ssVertical
+        ShowHint = False
+        TabOrder = 1
+      end
+      object atCmdCounter: TEdit
+        Left = 272
+        Top = 160
+        Width = 33
+        Height = 21
+        TabOrder = 3
+      end
+      object atOpenTC: TButton
+        Left = 120
+        Top = 504
+        Width = 101
+        Height = 25
+        Caption = 'Open Test Case'
+        TabOrder = 4
+        OnClick = atOpenTCClick
+      end
+      object atSaveTC: TButton
+        Left = 272
+        Top = 504
+        Width = 97
+        Height = 25
+        Caption = 'Save Test Case'
+        TabOrder = 5
+        OnClick = atSaveTCClick
+      end
     end
   end
   object Panel23: TPanel
@@ -13069,7 +13123,7 @@ object frmMain: TfrmMain
     Left = 952
     Top = 40
     Bitmap = {
-      494C010102000800780410001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800840410001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -13216,7 +13270,7 @@ object frmMain: TfrmMain
     Left = 896
     Top = 240
     Bitmap = {
-      494C0101020004006804220022007A96DF00FF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020004007404220022007A96DF00FF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000880000002200000001002000000000004048
       0000000000000000000000000000000000008080800080808000808080008080
       8000808080008080800080808000808080008080800080808000808080008080
@@ -13894,5 +13948,13 @@ object frmMain: TfrmMain
     OnTimer = OnTimerEventMessage200ms
     Left = 816
     Top = 112
+  end
+  object atLoadTestCase: TOpenTextFileDialog
+    Left = 168
+    Top = 584
+  end
+  object atSaveTestCase: TSaveTextFileDialog
+    Left = 304
+    Top = 592
   end
 end
