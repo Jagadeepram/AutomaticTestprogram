@@ -13008,8 +13008,6 @@ object frmMain: TfrmMain
     object autoTest: TTabSheet
       Caption = 'Automatic Test'
       ImageIndex = 14
-      ExplicitLeft = 3
-      ExplicitTop = 23
       object atCmdTxt: TEdit
         Left = 112
         Top = 160
@@ -13023,8 +13021,33 @@ object frmMain: TfrmMain
         Width = 109
         Height = 25
         Caption = 'Send Command'
-        TabOrder = 2
+        TabOrder = 1
         OnClick = atSendCmdClick
+      end
+      object atCmdCounter: TEdit
+        Left = 272
+        Top = 160
+        Width = 33
+        Height = 21
+        TabOrder = 2
+      end
+      object atOpenTC: TButton
+        Left = 120
+        Top = 504
+        Width = 101
+        Height = 25
+        Caption = 'Open Test Case'
+        TabOrder = 3
+        OnClick = atOpenTCClick
+      end
+      object atSaveTC: TButton
+        Left = 272
+        Top = 504
+        Width = 97
+        Height = 25
+        Caption = 'Save Test Case'
+        TabOrder = 4
+        OnClick = atSaveTCClick
       end
       object atLogs: TMemo
         Left = 112
@@ -13037,32 +13060,7 @@ object frmMain: TfrmMain
         ParentShowHint = False
         ScrollBars = ssVertical
         ShowHint = False
-        TabOrder = 1
-      end
-      object atCmdCounter: TEdit
-        Left = 272
-        Top = 160
-        Width = 33
-        Height = 21
-        TabOrder = 3
-      end
-      object atOpenTC: TButton
-        Left = 120
-        Top = 504
-        Width = 101
-        Height = 25
-        Caption = 'Open Test Case'
-        TabOrder = 4
-        OnClick = atOpenTCClick
-      end
-      object atSaveTC: TButton
-        Left = 272
-        Top = 504
-        Width = 97
-        Height = 25
-        Caption = 'Save Test Case'
         TabOrder = 5
-        OnClick = atSaveTCClick
       end
     end
   end
@@ -13125,7 +13123,7 @@ object frmMain: TfrmMain
     Left = 952
     Top = 40
     Bitmap = {
-      494C010102000800840410001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800880410001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -13272,7 +13270,7 @@ object frmMain: TfrmMain
     Left = 896
     Top = 240
     Bitmap = {
-      494C0101020004007404220022007A96DF00FF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020004007804220022007A96DF00FF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000880000002200000001002000000000004048
       0000000000000000000000000000000000008080800080808000808080008080
       8000808080008080800080808000808080008080800080808000808080008080

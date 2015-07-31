@@ -146,6 +146,8 @@ type
                          var result: integer); stdcall;
    // End GPIB
 
+
+
   TfrmMain = class(TForm)
     ApplicationEvents: TApplicationEvents;
     ImageList1: TImageList;
@@ -747,9 +749,9 @@ type
     atLogs: TMemo;
     atCmdCounter: TEdit;
     atLoadTestCase: TOpenTextFileDialog;
-    atSaveTestCase: TSaveTextFileDialog;
     atOpenTC: TButton;
     atSaveTC: TButton;
+    atSaveTestCase: TSaveTextFileDialog;
 
     procedure ApplicationEventsMessage(var Msg: tagMSG; var Handled: Boolean);
     function  SendAdvancedModeMessage() : boolean;
@@ -877,6 +879,19 @@ type
 type
   TCobiaComSource = (NONE, USB_HID, USB_CDC);    // Cources for communication to Cobia
   TTrigMode = (TRIG_PEAK, TRIG_DISABLE, TRIG_MANUAL, TRIG_WINDOW, TRIG_ON, TRIG_OFF);
+
+  // Data Type of Automatic testing tools.
+   AutoTestRecord = Record
+   cmd: string[20];
+   reps : string[20];
+   ms_respTime : string[10];
+   ms_delaybtnReps : string[10];
+   expectedRes: string[500];
+   actualRes: string[500];
+   caseRes: bool;
+   prevTest: ^AutoTestRecord;
+   nextTest: ^AutoTestRecord;
+   end;
 
 const
   MAX_LEN_INPUT_STRING        = 1000;  // Number of strings in ringbuffert for incoming strings from Cobia (large to get rid of waveform data)
@@ -1212,9 +1227,6 @@ private
     procedure ChinaAdjustment_SetDefault();
     function SendCommand_EraseCalCRC() : boolean;
 
-    // Function of Automatic testing module
-    procedure ParseAutoTestCases(FileName: string; Encoding: TEncoding );
-
   public
     pPolys: CPolynomials;
     _numsamples : Integer;
@@ -1223,6 +1235,9 @@ private
     _subitems : Integer;
     _firstTrig : Boolean;
     iSensitivity: Integer;
+
+    TestCases: ^AutoTestRecord; // Pointer of a Record
+    // http://www.delphibasics.co.uk/Article.asp?Name=Pointers
     procedure Print(txt:string);
     procedure Delay(Num: longint);
     procedure EvaluatePolynomials();
@@ -1232,6 +1247,8 @@ private
     function SendExternalProtocolCommand(cmd : AnsiString) : boolean;
     function SendCommand(cmd : string) : boolean;
     procedure SendTrigCommand(trigMode : TTrigMode; windowTimeMs : Integer);
+        // Function of Automatic testing module
+    procedure ParseAutoTestCases(FileName: string; Encoding: TEncoding );
   end;
 
 var
@@ -2735,12 +2752,24 @@ end;
 
  // Prase function of Automatic test unit.
  // Read the xml file, store node information in structure.
-
-procedure ParseAutoTestCases(FileName: string; Encoding: TEncoding );
+ // http://www.delphibasics.co.uk/Article.asp?Name=Pointers
+procedure TfrmMain.ParseAutoTestCases(FileName: string; Encoding: TEncoding );
+var
   XMLDoc: IXMLDocument;
-  XMLNode: IXMLNode;
+  XMLRootNode,XMLIndivNode: IXMLNode;
+  I: integer;
 begin
-
+  XMLDoc := TXMLDocument.Create(nil);
+  XMLDoc.LoadFromFile(FileName);
+  XMLRootNode := XMLDoc.ChildNodes.FindNode('TestCase');
+  if (XMLRootNode <> nil) then
+  begin
+     for I := 0 to XMLRootNode.ChildNodes.Count - 1 do
+     begin
+         XMLIndivNode := XMLRootNode.ChildNodes.Get(I);
+         atLogs.Lines.Add(XMLIndivNode.XML);
+     end;
+  end;
 end;
 
 procedure TfrmMain.atOpenTCClick(Sender: TObject);
@@ -2761,7 +2790,7 @@ begin
     if FileExists(Filename) then
     begin
       //display the contents in a memo based on the selected encoding
-      atLogs.Lines.LoadFromFile(FileName, Encoding);
+      //atLogs.Lines.LoadFromFile(FileName, Encoding);
       ParseAutoTestCases(FileName,Encoding);
     end
     else
